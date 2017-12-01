@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
  import MuiThemeProvider from 
  'material-ui/styles/MuiThemeProvider';
-import * as firebase from 'firebase';
+import firebase from 'firebase';
+import 'firebase/firestore';
 
 import './index.css';
 import App from './App';
@@ -16,8 +17,11 @@ var config = {
   storageBucket:"react-chatt.appspot.com",
   messagingSenderId: "645278689514"
 };
-  firebase.initializeApp(config);
+firebase.initializeApp(config);
 
+const myFirestore = firebase.firestore();
+
+export { myFirestore} ;
 
  const RenderApp = () => (
   <MuiThemeProvider>

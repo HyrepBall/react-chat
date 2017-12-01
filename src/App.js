@@ -1,11 +1,14 @@
 import React, { Component } from 'react'; 
 import { FlatButton, AppBar, TextField } 
 from 'material-ui';
-import * as firebase from 'firebase';
-import { blue500, blue600 } from 
+import firebase from 'firebase';
+import { blue500 } from 
 'material-ui/styles/colors';
 
 import './App.css';
+
+import { myFirestore } from 
+'./index.js';
 
 var styles = {
   appBarStyle: {
@@ -27,19 +30,20 @@ class App extends Component {
 
   componentDidMount() {
 
-    this.setState({
-      test: 'Qwert'
-    });
+    myFirestore.collection("users").add({
+      first: "Ada",
+      last: "Lovelace",
+      born: 1815
+    })
+    .then(function(docRef) {
+     alert(docRef.id);
+    })
+    .catch(function(error) {
+      alert("Ошибка добавления  документа: ", error);
+  });
 
-    const rootRef = 
-firebase.database().ref().child('react-chatt');
-    const testRef = rootRef.child('fire');
-    testRef.on('value', snap => {
-      this.setState({
-         test: snap.val()
-      });
-    });
-  }
+
+}
 
 
   handleLoginChange (e) {
@@ -67,6 +71,7 @@ firebase.database().ref().child('react-chatt');
 
 
   render() {
+
     return (
       <div className="App">
 	<AppBar
@@ -79,7 +84,7 @@ firebase.database().ref().child('react-chatt');
 	    style={{fontSize:15,}}
 	  />}
 	/>
-	<h2>{ this.state.test }</h2>
+	
 	<br/><br/>
 	<code> 
 	  {this.state.authForm.login}<br/>
