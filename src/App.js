@@ -30,18 +30,15 @@ class App extends Component {
 
   componentDidMount() {
 
-    myFirestore.collection("users").add({
-      first: "Ada",
-      last: "Lovelace",
-      born: 1815
-    })
-    .then(function(docRef) {
-     alert(docRef.id);
-    })
-    .catch(function(error) {
-      alert("Ошибка добавления  документа: ", error);
-  });
+ myFirestore.collection('users').get().then((snap) => {
+  snap.forEach((doc) => {
 
+   for ( var prop in doc.data() ) {
+    alert( doc.data()[prop] )
+   }
+
+  });
+})
 
 }
 
