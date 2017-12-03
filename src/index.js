@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
  import MuiThemeProvider from 
  'material-ui/styles/MuiThemeProvider';
 import firebase from 'firebase';
-import 'firebase/firestore';
+
 
 import './index.css';
 import App from './App';
@@ -19,9 +19,6 @@ var config = {
 };
 firebase.initializeApp(config);
 
-const myFirestore = firebase.firestore();
-
-export { myFirestore} ;
 
  const RenderApp = () => (
   <MuiThemeProvider>

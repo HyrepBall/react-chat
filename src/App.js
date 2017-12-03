@@ -1,20 +1,33 @@
 import React, { Component } from 'react'; 
-import { FlatButton, AppBar, TextField } 
+import { FlatButton, AppBar, TextField, 
+Dialog } 
 from 'material-ui';
 import firebase from 'firebase';
+import 'firebase/firestore';
 import { blue500 } from 
 'material-ui/styles/colors';
 
 import './App.css';
 
-import { myFirestore } from 
-'./index.js';
-
-var styles = {
+const styles = {
   appBarStyle: {
     backgroundColor: blue500,
   },
+  primaryStyle: {
+    backgroundColor: blue500,
+    color: '#fff',
+  },
+  dialogStyle: {
+    height: '400px',
+    maxHeight: 'none',
+  },
+  inputStyle: {
+    width: '100%',
+    maxWidth: '100%',
+  },
 };
+
+
 
 class App extends Component {
   constructor() {
@@ -24,23 +37,16 @@ class App extends Component {
       authForm: {
         login: 'login',
 	pswd: 'pswd',
-      }
+      },
+      authDialogOpen: true,
     }
   }
 
   componentDidMount() {
 
- myFirestore.collection('users').get().then((snap) => {
-  snap.forEach((doc) => {
+   const auth = firebase.auth();
 
-   for ( var prop in doc.data() ) {
-    alert( doc.data()[prop] )
-   }
-
-  });
-})
-
-}
+  }
 
 
   handleLoginChange (e) {
@@ -66,52 +72,72 @@ class App extends Component {
   }
 
 
+  handleAuthDialogOpen = () =>  {
+    this.setState({
+      authDialogOpen: !this.state.authDialogOpen
+     })
+    
+  }
+
+
 
   render() {
+
+  const actions = [
+    <FlatButton
+      label='Войти'
+      onClick={this.handleAuthDialogOpen}
+      style={styles.primaryStyle}
+    />
+  ];
 
     return (
       <div className="App">
 	<AppBar
-	  title="Chat dashboard"
+	  title="Чат"
 	  titleStyle={{fontSize:15,}}
 	  style={styles.appBarStyle}
 	  iconElementRight={
 	  <FlatButton 
-	    label="Log in"
+	    label="Войти"
 	    style={{fontSize:15,}}
+	    onClick={this.handleAuthDialogOpen}
 	  />}
 	/>
-	
-	<br/><br/>
-	<code> 
-	  {this.state.authForm.login}<br/>
-	  {this.state.authForm.pswd}
-	</code>
-	<br/><br/>
-	<form onSubmit={(e) => 
-	  this.handleAuthSubmit(e)}
+
+	<Dialog
+	  title='Вход на сайт'
+	  actions={actions}
+	  modal={false}
+	  open={this.state.authDialogOpen}
+	  onRequestClose={
+	   this.handleAuthDialogOpen
+	  }
+	  bodyStyle={{
+	    //height: '40vh',
+	    minHeight: '30vh',
+	  }}
+	  contentStyle={{
+	    width: '94%',
+	    maxWidth: 'none',
+	  }}
 	>
+
 	  <TextField
-	    underlineFocusStyle={{
-	      borderColor: blue500,
-	    }}
-	    name='login'
-	    hintText='Логин'
-	    onChange={(e) => 
-	      this.handleLoginChange(e)
-	    }
+	    style={styles.inputStyle}
+	    hintText='Email'
 	  />
-	  <TextField 
-	    underlineFocusStyle={{
-	      borderColor: blue500,
-	    }}
-	    name='pswd'
+
+	  <TextField
+	    style={styles.inputStyle}
 	    hintText='Пароль'
-	    onChange={ (e) => 
-	      this.handlePswdChange(e)
-	    }
-	   />
-	</form>
+	  />
+
+
+	</Dialog>
+
+
+
       </div>
     );
   }
